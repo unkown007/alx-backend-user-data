@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ filtered logger module
 """
+from typing import List
 import re
 
 
@@ -8,15 +9,14 @@ patterns = {
     "extract": lambda x, y: r'(?P<field>{})=[^{}]*'.format('|'.join(x), y),
     "replace": lambda x: r'\g<field>={}'.format(x),
 }
-PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def filter_datum(
-        fields: list[str],
+        fields: List[str],
         redaction: str,
         message: str,
         separator: str) -> str:
-    """ Return the log message obfuscated
+    """ Filters text
     """
     extract, replace = (patterns["extract"], patterns["replace"])
     return re.sub(extract(fields, separator), replace(redaction), message)
