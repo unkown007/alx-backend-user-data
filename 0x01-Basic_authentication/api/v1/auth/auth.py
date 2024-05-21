@@ -3,6 +3,7 @@
 """
 from flask import request
 from typing import List, TypeVar
+import re
 
 
 class Auth:
@@ -15,11 +16,18 @@ class Auth:
             path(str): endpoint path
             excluded_paths(List[str]): list of excluded path for auth
         Return:
-            - False
+            - True if path no in excluded_paths else False
         Raises:
             Nothing expected
         """
-        return False
+        if path is None or excluded_paths is None:
+            return True
+        if len(excluded_paths) == 0:
+            return True
+        for pth in excluded_paths:
+            if re.search(f"^{path}", pth) is not None:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """ Look for Authorization header in the request
