@@ -43,7 +43,11 @@ def authenticate():
         - Forbidden(403) - if the user is not found
         - Unauthorized(401) - if the user is not authorized
     """
-    excluded_paths = ['/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
+    excluded_paths = [
+        '/api/v1/status/',
+        '/api/v1/unauthorized/',
+        '/api/v1/forbidden/'
+    ]
     path = request.path
     if auth is not None and auth.require_auth(path, excluded_paths):
         if auth.authorization_header(request) is None:
