@@ -66,7 +66,10 @@ if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
 
-    if getenv("AUTH_TYPE") is not None and getenv("AUTH_TYPE") in auth_cls:
-        auth = auth_cls.get(getenv("AUTH_TYPE"))()
+    if getenv("AUTH_TYPE") is not None:
+        if getenv("AUTH_TYPE") in auth_cls:
+            auth = auth_cls.get(getenv("AUTH_TYPE"))()
+        else:
+            auth = Auth()
 
     app.run(host=host, port=port)
