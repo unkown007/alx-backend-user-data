@@ -2,6 +2,8 @@
 """ Module to implement Basic API authentication
 """
 from api.v1.auth.auth import Auth
+from models.user import User
+from typing import TypeVar
 import re
 import base64
 
@@ -65,3 +67,30 @@ class BasicAuth(Auth):
             return (None, None)
 
         return tuple(re.split(":", decoded_base64_authorization_header))
+
+    def user_object_from_credentials(
+            self,
+            user_email: str,
+            user_pwd: str
+    ) -> TypeVar('User'):
+        """ Authenticate a user
+        Args:
+            user_email(str): user email
+            user_pwd(pwd): user password
+        Return:
+            User object
+        Raises
+            Nothing
+        """
+        if user_email is None or\
+                not isinstance(user_email, str) or\
+                user_pwd is None or\
+                not isinstance(user_pwd, str):
+            return None
+        users = User.search({"email": user_email})
+        if len(users) == 0:
+            return None
+        for user in users:
+            if user.is_valid_password(user_pwd):
+                return user
+        return None
