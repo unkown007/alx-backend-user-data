@@ -82,15 +82,15 @@ class BasicAuth(Auth):
         Raises
             Nothing
         """
-        if user_email is None or\
-                not isinstance(user_email, str) or\
-                user_pwd is None or\
+        if not isinstance(user_email, str) or\
                 not isinstance(user_pwd, str):
             return None
-        users = User.search({"email": user_email})
-        if len(users) == 0:
+        try:
+            users = User.search({"email": user_email})
+        except Exception:
             return None
-        for user in users:
-            if user.is_valid_password(user_pwd):
-                return user
+        if len(users) <= 0:
+            return None
+        if users[0].is_valid_password(user_pwd):
+            return users[0]
         return None
